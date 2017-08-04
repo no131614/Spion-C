@@ -31,8 +31,8 @@ public class RequestHandler {
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(20000); //20000 = 20 seconds
-            conn.setConnectTimeout(20000); //20000 = 20 seconds
+            conn.setReadTimeout(15000); //15000 = 15 seconds
+            conn.setConnectTimeout(15000); //15000 = 15 seconds
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);

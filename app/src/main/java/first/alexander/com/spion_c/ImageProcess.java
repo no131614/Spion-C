@@ -17,7 +17,7 @@ public class ImageProcess extends AppCompatActivity {
 
 
     public static final String KEY_IMAGE = "key_image";
-    public static final String UPLOAD_URL = "http://dbtest07.000webhostapp.com/upload.php";  //Change the URL
+    public static final String UPLOAD_URL = "http://dbtest07.000webhostapp.com/upload.php";
 
 
     public String getStringImage(Bitmap bmp){

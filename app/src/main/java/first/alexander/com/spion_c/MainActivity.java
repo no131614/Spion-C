@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
         //Button to go to use the camera service (runs in background)
         btnCamera = (Button)findViewById(R.id.btnCamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {

@@ -56,11 +56,10 @@ public class CameraService extends Service implements
     SharedPreferences.Editor editor;
     int width = 0, height = 0;
 
-    /** Called when the activity is first created. */
+    /* Called when the activity is first created. */
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     private Camera openFrontFacingCameraGingerbread() {
@@ -101,7 +100,7 @@ public class CameraService extends Service implements
             if (pictureSize != null)
                 parameters
                         .setPictureSize(pictureSize.width, pictureSize.height);
-            // save width and height in sharedprefrences
+            // save width and height in shared preferences
             width = pictureSize.width;
             height = pictureSize.height;
             editor.putInt("Picture_Width", width);
@@ -410,7 +409,7 @@ public class CameraService extends Service implements
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.TYPE_TOAST, //Changed from TYPE_PHONE to Type_Toast to work for API > 21
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 

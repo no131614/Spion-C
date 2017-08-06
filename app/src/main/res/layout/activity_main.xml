@@ -12,18 +12,39 @@
         android:layout_gravity="center_vertical|right"
         android:textSize="30sp"
         android:id="@+id/textView"
+        android:layout_marginTop="29dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="88dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Take Picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnCamera"
-        android:layout_marginTop="134dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:ems="10"
+        android:inputType="number"
+        android:layout_below="@+id/btnCamera"
+        android:layout_alignStart="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
+
+    <Button
+        android:id="@+id/button"
+        style="@android:style/Widget.Material.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:text="Button"
+        android:layout_below="@+id/editText"
+        android:layout_alignStart="@+id/editText" />
 
 
 </RelativeLayout>

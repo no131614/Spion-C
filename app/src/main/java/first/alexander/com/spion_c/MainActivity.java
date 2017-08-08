@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnCamera;
+    Button btn_equal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Button to go to use the camera service (runs in background)
-        btnCamera = (Button)findViewById(R.id.btnCamera);
-        btnCamera.setOnClickListener(new View.OnClickListener() {
+        btn_equal = (Button)findViewById(R.id.btn_equal);
+        btn_equal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //dispatchTakePictureIntent();

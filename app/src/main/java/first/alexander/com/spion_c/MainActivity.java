@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+//import android.databinding.DataBindingUtil;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btn_equal;
+    Button buttonEqual, buttonZero;
+    //private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Button to go to use the camera service (runs in background)
-        btn_equal = (Button)findViewById(R.id.btn_equal);
-        btn_equal.setOnClickListener(new View.OnClickListener() {
+        buttonEqual = (Button)findViewById(R.id.buttonEqual);
+        buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //dispatchTakePictureIntent();
@@ -33,9 +35,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+       /* binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        binding.buttonZero.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "0");
+            }
+        });*/
+
+
+    }
+
+    private void Calculate() {
+
     }
 
 
 }
+
+
 
 

@@ -21,8 +21,8 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/buttonDiv"
-        android:layout_below="@id/buttonFive"
+        android:layout_alignRight="@+id/buttonDiv"
+        android:layout_below="@+id/buttonFive"
         android:text="2"
         android:textSize="20sp" />
 
@@ -31,7 +31,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonFour"
+        android:layout_below="@+id/buttonFour"
         android:text="1"
         android:textSize="20sp" />
 
@@ -60,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editText"
         android:text="C"
+        android:background="@android:color/holo_orange_light"
         android:textSize="20sp" />
 
     <Button
@@ -70,6 +71,7 @@
         android:layout_below="@id/editText"
         android:layout_toRightOf="@id/buttonC"
         android:text="/"
+        android:background="@android:color/holo_red_light"
         android:textSize="20sp" />
 
     <Button
@@ -78,6 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="*"
+        android:background="@android:color/holo_green_light"
         android:textSize="20sp"
         android:layout_below="@+id/editText"
         android:layout_toEndOf="@+id/buttonDiv" />
@@ -174,13 +177,12 @@
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/buttonDivide"
+        android:id="@+id/button4"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/buttonMul"
         android:layout_toRightOf="@id/buttonMul"
-        android:text="/"
         android:textSize="20sp" />
 
     <Button
@@ -220,8 +222,8 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/button2"
         android:layout_below="@id/button2"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:text="="
+        android:background="@android:color/holo_blue_bright"
         android:textSize="20sp" />
 
 

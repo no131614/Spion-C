@@ -56,7 +56,6 @@ public class CameraService extends Service implements
     SharedPreferences.Editor editor;
     int width = 0, height = 0;
 
-    /* Called when the activity is first created. */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -521,7 +520,7 @@ public class CameraService extends Service implements
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(),
-                            "Your Picture has been taken !", Toast.LENGTH_SHORT)
+                            "Picture Taken !", Toast.LENGTH_SHORT)
                             .show();
                 }
             });

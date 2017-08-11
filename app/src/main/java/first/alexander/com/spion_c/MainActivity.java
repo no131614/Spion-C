@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-//import android.databinding.DataBindingUtil;
+import android.databinding.DataBindingUtil;
+
+import first.alexander.com.spion_c.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
 
     Button buttonEqual, buttonZero;
-    //private ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-       /* binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         binding.buttonZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.editText.setText(binding.editText.getText() + "0");
             }
-        });*/
+        });
 
 
     }

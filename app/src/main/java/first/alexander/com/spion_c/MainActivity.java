@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static final char SUBTRACTION = '-';
     private static final char MULTIPLICATION = '*';
     private static final char DIVISION = '/';
+    private static final char NONE = '0';
 
     private char current_operation;
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 binding.infoTextView.setText(binding.infoTextView.getText().toString() +
                         decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
                 valueOne = Double.NaN;
-                current_operation = '0';
+                current_operation = NONE;
 
 
                 /*Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
@@ -176,9 +177,10 @@ public class MainActivity extends AppCompatActivity {
                 binding.editText.setText(null);
             }
         });
-        
 
-        binding.buttonC.setOnClickListener(new View.OnClickListener() {
+
+
+        binding.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(binding.editText.getText().length() > 0) {
@@ -191,6 +193,17 @@ public class MainActivity extends AppCompatActivity {
                     binding.editText.setText("");
                     binding.infoTextView.setText("");
                 }
+            }
+        });
+
+
+        binding.buttonC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                valueOne = Double.NaN;
+                valueTwo = Double.NaN;
+                binding.editText.setText(null);
+                binding.infoTextView.setText(null);
             }
         });
 

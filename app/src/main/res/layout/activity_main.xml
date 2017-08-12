@@ -41,11 +41,12 @@
         android:text="1"
         android:textSize="20sp" />
 
-    <TextView
+    <EditText
         android:id="@+id/infoTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
+        android:enabled="false"
         android:textSize="30sp" />
 
     <EditText
@@ -66,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editText"
         android:text="C"
-        android:background="@android:color/holo_orange_light"
+        android:background="@android:color/holo_red_dark"
         android:textSize="20sp" />
 
     <Button
@@ -77,7 +78,7 @@
         android:layout_below="@id/editText"
         android:layout_toRightOf="@id/buttonC"
         android:text="/"
-        android:background="@android:color/holo_red_light"
+        android:background="@android:color/holo_blue_bright"
         android:textSize="20sp" />
 
     <Button
@@ -183,12 +184,14 @@
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonDelete"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/buttonMul"
         android:layout_toRightOf="@id/buttonMul"
+        android:text="Del"
+        android:background="@android:color/holo_orange_dark"
         android:textSize="20sp" />
 
     <Button
@@ -229,7 +232,7 @@
         android:layout_alignRight="@id/button2"
         android:layout_below="@id/button2"
         android:text="="
-        android:background="@android:color/holo_blue_bright"
+        android:background="@android:color/holo_blue_dark"
         android:textSize="20sp" />
 
 

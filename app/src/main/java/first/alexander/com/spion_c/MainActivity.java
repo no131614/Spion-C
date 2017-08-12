@@ -12,7 +12,7 @@ import first.alexander.com.spion_c.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button buttonEqual, buttonZero;
+    Button buttonEqual;
     private ActivityMainBinding binding;
 
     @Override
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Button to go to use the camera service (runs in background)
-        buttonEqual = (Button)findViewById(R.id.buttonEqual);
+        /*buttonEqual = (Button)findViewById(R.id.buttonEqual);
         buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 //startService(front_translucent);
 
             }
-        });
+        });*/
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
 
         binding.buttonZero.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +48,118 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.buttonOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "1");
+            }
+        });
+
+        binding.buttonTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "2");
+            }
+        });
+
+        binding.buttonThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "3");
+            }
+        });
+
+        binding.buttonFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "4");
+            }
+        });
+
+        binding.buttonFive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "5");
+            }
+        });
+
+        binding.buttonSix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "6");
+            }
+        });
+
+        binding.buttonSeven.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "7");
+            }
+        });
+
+        binding.buttonEight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "8");
+            }
+        });
+
+        binding.buttonNine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + "9");
+            }
+        });
+
+        binding.buttonDot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.editText.setText(binding.editText.getText() + ".");
+            }
+        });
+
+
+        binding.buttonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.buttonMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.buttonMul.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.buttonDiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.buttonEqual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.buttonC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 

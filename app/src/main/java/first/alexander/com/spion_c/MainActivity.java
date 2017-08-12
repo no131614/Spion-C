@@ -4,22 +4,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.databinding.DataBindingUtil;
+
+import java.text.DecimalFormat;
 
 import first.alexander.com.spion_c.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-    
+
     private ActivityMainBinding binding;
+
+    private static final char ADDITION = '+';
+    private static final char SUBTRACTION = '-';
+    private static final char MULTIPLICATION = '*';
+    private static final char DIVISION = '/';
+
+    private char current_operation;
+
+    private double valueOne = Double.NaN;
+    private double valueTwo;
+
+    private DecimalFormat decimalFormat;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        decimalFormat = new DecimalFormat("#.##########");
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -29,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //dispatchTakePictureIntent();
 
-                Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
+                Calculate();
+                binding.infoTextView.setText(binding.infoTextView.getText().toString() +
+                        decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
+                valueOne = Double.NaN;
+                current_operation = '0';
+
+
+                /*Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
                 front_translucent.putExtra("Front_Request", true);
                 // front_translucent.putExtra("Quality_Mode", camCapture.getQuality());
                 getApplication().getApplicationContext().startService(front_translucent);
-                //startService(front_translucent);
+                //startService(front_translucent);*/
             }
         });
 
@@ -118,48 +140,83 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Calculate();
+                current_operation = ADDITION;
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
+                binding.editText.setText(null);
             }
         });
 
         binding.buttonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Calculate();
+                current_operation = SUBTRACTION;
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
+                binding.editText.setText(null);
             }
         });
 
         binding.buttonMul.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Calculate();
+                current_operation = MULTIPLICATION;
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
+                binding.editText.setText(null);
             }
         });
 
         binding.buttonDiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Calculate();
+                current_operation = DIVISION;
+                binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
+                binding.editText.setText(null);
             }
         });
-
-        binding.buttonEqual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        
 
         binding.buttonC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(binding.editText.getText().length() > 0) {
+                    CharSequence currentText = binding.editText.getText();
+                    binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
+                }
+                else {
+                    valueOne = Double.NaN;
+                    valueTwo = Double.NaN;
+                    binding.editText.setText("");
+                    binding.infoTextView.setText("");
+                }
             }
         });
 
     }
 
+
     private void Calculate() {
+        if(!Double.isNaN(valueOne)) {
+            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+            binding.editText.setText(null);
+
+            if(current_operation == ADDITION)
+                valueOne = this.valueOne + valueTwo;
+            else if(current_operation == SUBTRACTION)
+                valueOne = this.valueOne - valueTwo;
+            else if(current_operation == MULTIPLICATION)
+                valueOne = this.valueOne * valueTwo;
+            else if(current_operation == DIVISION)
+                valueOne = this.valueOne / valueTwo;
+        }
+        else {
+            try {
+                valueOne = Double.parseDouble(binding.editText.getText().toString());
+            }
+            catch (Exception e){}
+        }
 
     }
 

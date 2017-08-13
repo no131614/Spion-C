@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private double valueOne = Double.NaN;
     private double valueTwo;
 
+    private String valueTwoString;
+
     private DecimalFormat decimalFormat;
 
 
@@ -212,7 +214,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void Calculate() {
         if(!Double.isNaN(valueOne)) {
-            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+            valueTwoString = binding.editText.getText().toString();
+
+            if(valueTwoString.isEmpty()){
+                return;
+            }
+
+            valueTwo =   Double.parseDouble(valueTwoString);
+
             binding.editText.setText(null);
 
             if(current_operation == ADDITION)

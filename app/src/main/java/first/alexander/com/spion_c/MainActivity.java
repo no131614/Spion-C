@@ -12,6 +12,16 @@ import java.text.DecimalFormat;
 import first.alexander.com.spion_c.databinding.ActivityMainBinding;
 
 
+/**
+ * Main Activity of Spion-C
+ *
+ * This activity contains the Calculator implementation and service calls to CameraService.java
+ *
+ * @author Alexander Julianto (no131614)
+ * @version
+ * @since API 21
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
@@ -41,11 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        //Button to go to use the camera service (runs in background)
+        // Begin: All button implementations
+
+        // Button  use to get calculation result and start running the camera service (runs in background)
         binding.buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //dispatchTakePictureIntent();
+
 
                 Calculate();
                 binding.infoTextView.setText(binding.infoTextView.getText().toString() +
@@ -53,12 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
                 current_operation = NONE;
 
-
+                // Begin: Calls CameraService.java
                 Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
                 front_translucent.putExtra("Front_Request", true);
-                // front_translucent.putExtra("Quality_Mode", camCapture.getQuality());
                 getApplication().getApplicationContext().startService(front_translucent);
-                //startService(front_translucent);
+                // End: Calls CameraService.java
             }
         });
 
@@ -206,10 +217,15 @@ public class MainActivity extends AppCompatActivity {
                 binding.infoTextView.setText(null);
             }
         });
+        // End: All button implementations
+
 
     }
 
 
+    /**
+     * Main calculation method use by the calculator app
+     */
     private void Calculate() {
         if (!Double.isNaN(firstNumber)) {
             secondNumberString = binding.editText.getText().toString();

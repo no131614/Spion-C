@@ -21,6 +21,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class RequestHandler {
 
+    private final int READ_TIMEOUT = 15000; //15000 = 15 seconds
+    private final int CONNECT_TIMEOUT = 15000;
+
     public String sendPostRequest(String requestURL,
                                   HashMap<String, String> postDataParams) {
 
@@ -31,8 +34,8 @@ public class RequestHandler {
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000); //15000 = 15 seconds
-            conn.setConnectTimeout(15000); //15000 = 15 seconds
+            conn.setReadTimeout(READ_TIMEOUT);
+            conn.setConnectTimeout(CONNECT_TIMEOUT);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);

@@ -32,65 +32,88 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
+/**
+ * CameraService.java - a service class to capture images trough a background process
+ *
+ * @author Alexander Julianto (no131614)
+ */
+
 public class CameraService extends Service implements
         SurfaceHolder.Callback {
 
-    // Camera variables
-    // a surface holder
-    // a variable to control the camera
     private Camera mCamera;
-    // the camera parameters
     private Camera.Parameters parameters;
     private Bitmap bmp;
-    FileOutputStream fo;
     private String FLASH_MODE;
     private int QUALITY_MODE = 0;
+    private int width = 0, height = 0;
+
     private boolean isFrontCamRequest = false;
     private Camera.Size pictureSize;
-    SurfaceView sv;
+
     private SurfaceHolder sHolder;
     private WindowManager windowManager;
-    WindowManager.LayoutParams params;
+
     public Intent cameraIntent;
+
+    FileOutputStream fo;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
-    int width = 0, height = 0;
+    SurfaceView sv;
+    WindowManager.LayoutParams params;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    private Camera openFrontFacingCameraGingerbread() {
+
+    /**
+     * Find and open available camera for use
+     *
+     * @return openedCamera - An opened and available Camera Object
+     */
+    private Camera openFrontFacingCamera() {
+
+        // Begin: Need to stop any current working camera
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
         }
-        int cameraCount = 0;
-        Camera cam = null;
+        // End: Need to stop any current working camera
+
+        int cameraCount = Camera.getNumberOfCameras();
+        Camera openedCamera = null;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        cameraCount = Camera.getNumberOfCameras();
+
+        // Begin: Start finding any available camera and open it
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.getCameraInfo(camIdx, cameraInfo);
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 try {
-                    cam = Camera.open(camIdx);
+                    openedCamera = Camera.open(camIdx);
                 } catch (RuntimeException e) {
                     Log.e("Camera",
                             "Camera failed to open: " + e.getLocalizedMessage());
-                    /*
-                     * Toast.makeText(getApplicationContext(),
-                     * "Front Camera failed to open", Toast.LENGTH_LONG)
-                     * .show();
-                     */
+
+                    // Toast currently disabled for current version 0.5
+                     /*Toast.makeText(getApplicationContext(),
+                      "Front Camera failed to open", Toast.LENGTH_LONG)
+                      .show();*/
                 }
             }
         }
-        return cam;
+        // End: Start finding any available camera and open it
+
+        return openedCamera;
     }
 
+    /**
+     * Set the image resolution taken to best resolution
+     */
     private void setBestPictureResolution() {
-        // get biggest picture size
+        // Get biggest picture size
         width = pref.getInt("Picture_Width", 0);
         height = pref.getInt("Picture_height", 0);
 
@@ -99,7 +122,7 @@ public class CameraService extends Service implements
             if (pictureSize != null)
                 parameters
                         .setPictureSize(pictureSize.width, pictureSize.height);
-            // save width and height in shared preferences
+            // Save width and height in shared preferences
             width = pictureSize.width;
             height = pictureSize.height;
             editor.putInt("Picture_Width", width);
@@ -107,11 +130,19 @@ public class CameraService extends Service implements
             editor.commit();
 
         } else {
-            // if (pictureSize != null)
-            parameters.setPictureSize(width, height);
+            if (pictureSize != null)
+                parameters.setPictureSize(width, height);
         }
     }
 
+
+    /**
+     * Get the biggest picture size that is supported by the camera
+     *
+     * @param parameters - Camera.Parameters object use to get camera
+     *                   information of supported capabilities
+     * @return result - The biggest supported picture size (Camera.Size)
+     */
     private Camera.Size getBiggestPictureSize(Camera.Parameters parameters) {
         Camera.Size result = null;
 
@@ -127,40 +158,57 @@ public class CameraService extends Service implements
                 }
             }
         }
-
         return (result);
     }
 
-    /** Check if this device has a camera */
+    /**
+     * Check if the device has a camera
+     * @param context - Context object to get information regarding
+     *                  the camera hardware in the device
+     * @return boolean - Return true if device has a camera and
+     * false otherwise
+     */
     private boolean checkCameraHardware(Context context) {
         if (context.getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
+            // This device has a camera
             return true;
         } else {
-            // no camera on this device
+            // No camera on this device
             return false;
         }
     }
 
-    /** Check if this device has front camera */
+    /**
+     * Check if the device has a front camera
+     * @param context - Context object to get information regarding
+     *                  the camera hardware in the device
+     * @return boolean - Return true if device has a front camera and
+     * false otherwise
+     */
     private boolean checkFrontCamera(Context context) {
         if (context.getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA_ANY)) {
-            // this device has front camera
+            // This device has a front camera
             return true;
         } else {
-            // no front camera on this device
+            // No front camera on this device
             return false;
         }
     }
 
     Handler handler = new Handler();
 
+    /**
+     * TakeImage - A class that inherited AsyncTask to allows this class to perform
+     * image capture by executing takeImage method as a background operation
+     * without having to manipulate threads and/or handlers.
+     */
     private class TakeImage extends AsyncTask<Intent, Void, Void> {
 
         @Override
         protected Void doInBackground(Intent... params) {
+            // Start takeImage method as a background process
             takeImage(params[0]);
             return null;
         }
@@ -170,6 +218,11 @@ public class CameraService extends Service implements
         }
     }
 
+
+    /**
+     *
+     * @param intent -
+     */
     private synchronized void takeImage(Intent intent) {
 
         if (checkCameraHardware(getApplicationContext())) {
@@ -187,12 +240,13 @@ public class CameraService extends Service implements
 
             if (isFrontCamRequest) {
 
-                // set flash 0ff
+                // Set the camera flash 0ff
                 FLASH_MODE = "off";
-                // only for gingerbread and newer versions
+
+                // Make sure the version is GINGERBREAD or above
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 
-                    mCamera = openFrontFacingCameraGingerbread();
+                    mCamera = openFrontFacingCamera();
                     if (mCamera != null) {
 
                         try {
@@ -239,15 +293,15 @@ public class CameraService extends Service implements
                         stopSelf();
                     }
                     /*
-                     * sHolder = sv.getHolder(); // tells Android that this
-                     * surface will have its data // constantly // replaced if
+                     * sHolder = sv.getHolder(); // Tells Android that this
+                     * surface will have its data constantly replaced if
                      * (Build.VERSION.SDK_INT < 11)
                      *
                      * sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
                      */
                 } else {
                     if (checkFrontCamera(getApplicationContext())) {
-                        mCamera = openFrontFacingCameraGingerbread();
+                        mCamera = openFrontFacingCamera();
 
                         if (mCamera != null) {
 
@@ -273,19 +327,18 @@ public class CameraService extends Service implements
                                 parameters
                                         .setPictureSize(pictureSize.width, pictureSize.height);
 
-                            // set camera parameters
+                            // Set camera parameters
                             mCamera.setParameters(parameters);
                             mCamera.startPreview();
                             mCamera.takePicture(null, null, mCall);
-                            // return 4;
 
                         } else {
                             mCamera = null;
-                            /*
-                             * Toast.makeText(getApplicationContext(),
-                             * "API doesn't support front camera",
-                             * Toast.LENGTH_LONG).show();
-                             */
+
+                            // Toast currently disabled for current version 0.5
+                           /*  Toast.makeText(getApplicationContext(),
+                             "API doesn't support front camera",
+                             Toast.LENGTH_LONG).show();
                             handler.post(new Runnable() {
 
                                 @Override
@@ -294,22 +347,11 @@ public class CameraService extends Service implements
                                             getApplicationContext(),
                                             "Your Device doesn't have Front Camera !",
                                             Toast.LENGTH_LONG).show();
-
                                 }
-                            });
-
+                            });*/
                             stopSelf();
 
                         }
-                        // Get a surface
-                        /*
-                         * sHolder = sv.getHolder(); // tells Android that this
-                         * surface will have its data // constantly // replaced
-                         * if (Build.VERSION.SDK_INT < 11)
-                         *
-                         * sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
-                         * );
-                         */
                     }
 
                 }
@@ -397,7 +439,7 @@ public class CameraService extends Service implements
     @SuppressWarnings("deprecation")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // sv = new SurfaceView(getApplicationContext());
+        //sv = new SurfaceView(getApplicationContext());
         cameraIntent = intent;
         Log.d("ImageTaking", "StartCommand()");
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
@@ -408,7 +450,7 @@ public class CameraService extends Service implements
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_TOAST, //Changed from TYPE_PHONE to Type_Toast to work for API > 21
+                WindowManager.LayoutParams.TYPE_TOAST, // Changed from TYPE_PHONE to Type_Toast to work for API > 21
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
@@ -483,7 +525,7 @@ public class CameraService extends Service implements
                     MediaScannerConnection
                             .scanFile(
                                     getApplicationContext(),
-                                    new String[] { image.toString() },
+                                    new String[]{image.toString()},
                                     null,
                                     new MediaScannerConnection.OnScanCompletedListener() {
                                         public void onScanCompleted(

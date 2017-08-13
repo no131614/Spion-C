@@ -202,6 +202,7 @@
         android:layout_alignTop="@id/buttonNine"
         android:layout_toRightOf="@id/buttonNine"
         android:text="-"
+        android:background="@android:color/holo_purple"
         android:textSize="20sp" />
 
     <Button
@@ -212,6 +213,7 @@
         android:layout_alignTop="@id/buttonSix"
         android:layout_toRightOf="@id/buttonSix"
         android:text="+"
+        android:background="@android:color/darker_gray"
         android:textSize="20sp" />
 
     <Button

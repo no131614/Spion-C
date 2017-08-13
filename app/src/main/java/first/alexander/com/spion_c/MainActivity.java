@@ -3,6 +3,7 @@ package first.alexander.com.spion_c;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.databinding.DataBindingUtil;
 
@@ -23,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     private char current_operation;
 
-    private double valueOne = Double.NaN;
-    private double valueTwo;
+    private double firstNumber = Double.NaN;
+    private double secondNumber;
 
-    private String valueTwoString;
+    private String secondNumberString;
 
     private DecimalFormat decimalFormat;
 
@@ -49,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Calculate();
                 binding.infoTextView.setText(binding.infoTextView.getText().toString() +
-                        decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
-                valueOne = Double.NaN;
+                        decimalFormat.format(secondNumber) + " = " + decimalFormat.format(firstNumber));
+               // firstNumber = Double.NaN;
                 current_operation = NONE;
 
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Calculate();
                 current_operation = ADDITION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
+                binding.infoTextView.setText(decimalFormat.format(firstNumber) + "+");
                 binding.editText.setText(null);
             }
         });
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Calculate();
                 current_operation = SUBTRACTION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
+                binding.infoTextView.setText(decimalFormat.format(firstNumber) + "-");
                 binding.editText.setText(null);
             }
         });
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Calculate();
                 current_operation = MULTIPLICATION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
+                binding.infoTextView.setText(decimalFormat.format(firstNumber) + "*");
                 binding.editText.setText(null);
             }
         });
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Calculate();
                 current_operation = DIVISION;
-                binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
+                binding.infoTextView.setText(decimalFormat.format(firstNumber) + "/");
                 binding.editText.setText(null);
             }
         });
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
                     binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
                 }
                 else {
-                    valueOne = Double.NaN;
-                    valueTwo = Double.NaN;
+                    firstNumber = Double.NaN;
+                    secondNumber = Double.NaN;
                     binding.editText.setText("");
                     binding.infoTextView.setText("");
                 }
@@ -202,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                valueOne = Double.NaN;
-                valueTwo = Double.NaN;
+                firstNumber = Double.NaN;
+                secondNumber = Double.NaN;
                 binding.editText.setText(null);
                 binding.infoTextView.setText(null);
             }
@@ -213,31 +214,41 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void Calculate() {
-        if(!Double.isNaN(valueOne)) {
-            valueTwoString = binding.editText.getText().toString();
+        if(!Double.isNaN(firstNumber)) {
+            secondNumberString = binding.editText.getText().toString();
 
-            if(valueTwoString.isEmpty()){
+            if(secondNumberString.isEmpty()){
                 return;
             }
 
-            valueTwo =   Double.parseDouble(valueTwoString);
+            secondNumber =   Double.parseDouble(secondNumberString);
 
             binding.editText.setText(null);
 
-            if(current_operation == ADDITION)
-                valueOne = this.valueOne + valueTwo;
-            else if(current_operation == SUBTRACTION)
-                valueOne = this.valueOne - valueTwo;
-            else if(current_operation == MULTIPLICATION)
-                valueOne = this.valueOne * valueTwo;
-            else if(current_operation == DIVISION)
-                valueOne = this.valueOne / valueTwo;
+            if(current_operation == ADDITION) {
+                firstNumber = this.firstNumber + secondNumber;
+            }
+            else if(current_operation == SUBTRACTION) {
+                firstNumber = this.firstNumber - secondNumber;
+            }
+            else if(current_operation == MULTIPLICATION) {
+                firstNumber = this.firstNumber * secondNumber;
+            }
+            else if(current_operation == DIVISION) {
+                firstNumber = this.firstNumber / secondNumber;
+            }
+            else if(current_operation == NONE){
+                firstNumber = secondNumber;
+            }
+
         }
         else {
             try {
-                valueOne = Double.parseDouble(binding.editText.getText().toString());
+                firstNumber = Double.parseDouble(binding.editText.getText().toString());
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.d("Calculating", "Error Exception in Calculate");
+            }
         }
 
     }

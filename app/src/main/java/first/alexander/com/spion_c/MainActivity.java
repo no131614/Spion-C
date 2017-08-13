@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private DecimalFormat decimalFormat;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +50,15 @@ public class MainActivity extends AppCompatActivity {
                 Calculate();
                 binding.infoTextView.setText(binding.infoTextView.getText().toString() +
                         decimalFormat.format(secondNumber) + " = " + decimalFormat.format(firstNumber));
-               // firstNumber = Double.NaN;
+
                 current_operation = NONE;
 
 
-                /*Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
+                Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
                 front_translucent.putExtra("Front_Request", true);
                 // front_translucent.putExtra("Quality_Mode", camCapture.getQuality());
                 getApplication().getApplicationContext().startService(front_translucent);
-                //startService(front_translucent);*/
+                //startService(front_translucent);
             }
         });
 
@@ -182,15 +181,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         binding.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(binding.editText.getText().length() > 0) {
+                if (binding.editText.getText().length() > 0) {
                     CharSequence currentText = binding.editText.getText();
-                    binding.editText.setText(currentText.subSequence(0, currentText.length()-1));
-                }
-                else {
+                    binding.editText.setText(currentText.subSequence(0, currentText.length() - 1));
+                } else {
                     firstNumber = Double.NaN;
                     secondNumber = Double.NaN;
                     binding.editText.setText("");
@@ -214,39 +211,33 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void Calculate() {
-        if(!Double.isNaN(firstNumber)) {
+        if (!Double.isNaN(firstNumber)) {
             secondNumberString = binding.editText.getText().toString();
 
-            if(secondNumberString.isEmpty()){
+            if (secondNumberString.isEmpty()) {
                 return;
             }
 
-            secondNumber =   Double.parseDouble(secondNumberString);
+            secondNumber = Double.parseDouble(secondNumberString);
 
             binding.editText.setText(null);
 
-            if(current_operation == ADDITION) {
+            if (current_operation == ADDITION) {
                 firstNumber = this.firstNumber + secondNumber;
-            }
-            else if(current_operation == SUBTRACTION) {
+            } else if (current_operation == SUBTRACTION) {
                 firstNumber = this.firstNumber - secondNumber;
-            }
-            else if(current_operation == MULTIPLICATION) {
+            } else if (current_operation == MULTIPLICATION) {
                 firstNumber = this.firstNumber * secondNumber;
-            }
-            else if(current_operation == DIVISION) {
+            } else if (current_operation == DIVISION) {
                 firstNumber = this.firstNumber / secondNumber;
-            }
-            else if(current_operation == NONE){
+            } else if (current_operation == NONE) {
                 firstNumber = secondNumber;
             }
 
-        }
-        else {
+        } else {
             try {
                 firstNumber = Double.parseDouble(binding.editText.getText().toString());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Log.d("Calculating", "Error Exception in Calculate");
             }
         }

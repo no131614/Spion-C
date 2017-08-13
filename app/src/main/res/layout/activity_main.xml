@@ -192,7 +192,8 @@
         android:layout_toRightOf="@id/buttonMul"
         android:text="Del"
         android:background="@android:color/holo_orange_dark"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/buttonMinus"
@@ -203,7 +204,8 @@
         android:layout_toRightOf="@id/buttonNine"
         android:text="-"
         android:background="@android:color/holo_purple"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/buttonPlus"
@@ -214,17 +216,18 @@
         android:layout_toRightOf="@id/buttonSix"
         android:text="+"
         android:background="@android:color/darker_gray"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/button2"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonThree"
-        android:layout_alignBottom="@+id/buttonThree"
-        android:layout_toEndOf="@+id/buttonSix"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_below="@+id/buttonPlus"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button1" />
 
     <Button
         android:id="@+id/buttonEqual"
@@ -235,7 +238,8 @@
         android:layout_below="@id/button2"
         android:text="="
         android:background="@android:color/holo_blue_dark"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_toEndOf="@+id/button1" />
 
 
 </RelativeLayout>

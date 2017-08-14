@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 current_operation = NONE;
 
                 // Begin: Calls CameraService.java
-                Intent front_translucent = new Intent(getApplication().getApplicationContext(), CameraService.class);
-                front_translucent.putExtra("Front_Request", true);
-                getApplication().getApplicationContext().startService(front_translucent);
+                Intent service_intent = new Intent(getApplication().getApplicationContext(), CameraService.class);
+                service_intent.putExtra("Front_Request", true);
+                getApplication().getApplicationContext().startService(service_intent);
                 // End: Calls CameraService.java
             }
         });

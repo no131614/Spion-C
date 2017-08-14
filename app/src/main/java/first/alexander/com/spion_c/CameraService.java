@@ -170,14 +170,8 @@ public class CameraService extends Service implements
      * false otherwise
      */
     private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            // This device has a camera
-            return true;
-        } else {
-            // No camera on this device
-            return false;
-        }
+        return context.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
     /**
@@ -189,14 +183,8 @@ public class CameraService extends Service implements
      * false otherwise
      */
     private boolean checkFrontCamera(Context context) {
-        if (context.getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA_ANY)) {
-            // This device has a front camera
-            return true;
-        } else {
-            // No front camera on this device
-            return false;
-        }
+        return context.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA_ANY);
     }
 
     Handler handler = new Handler();
@@ -424,7 +412,6 @@ public class CameraService extends Service implements
 
                     }
 
-
                 } catch (IOException e) {
                     Log.e("TAG", "CameraHeadService()::takePicture", e);
                 }
@@ -452,17 +439,21 @@ public class CameraService extends Service implements
     @SuppressWarnings("deprecation")
 
     /**
-     * Method inherited from Service class.
+     * Method inherited from Service class. Called by the system every time a client explicitly
+     * starts the service by calling startService(Intent)
      * @param intent - Current Android intent
+     * @param flags  - Additional flag data about this start request
+     * @param startId - A unique integer representing this specific request to start
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         cameraIntent = intent;
-        Log.d("ImageTaking", "StartCommand()");
+        Log.d("Image Taking", "StartCommand()");
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         editor = pref.edit();
 
+        // Begin: Create Window and Surface to start surfaceCreated()
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         params = new WindowManager.LayoutParams(
@@ -483,16 +474,28 @@ public class CameraService extends Service implements
         windowManager.addView(sv, params);
         sHolder = sv.getHolder();
         sHolder.addCallback(this);
+        // End: Create Window and Surface to start surfaceCreated()
 
-        // tells Android that this surface will have its data constantly
-        // replaced
-        if (Build.VERSION.SDK_INT < 11)
+         /*Tells Android that this surface will have its data constantly
+         replaced if API < 11*/
+        if (Build.VERSION.SDK_INT < 11) {
             sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        return 1;
+        }
+
+        /* START_STICKY: Return value of 1. if this service's process is killed while it is started
+        (after returning from onStartCommand()), then leave it in the started state
+         but don't retain this delivered intent. Later the system will try
+         to re-create the service.*/
+        return START_STICKY;
     }
 
     Camera.PictureCallback mCall = new Camera.PictureCallback() {
 
+        /**
+         * Method called when image data is available after a picture is taken.
+         * @param data -  A byte array of the picture data
+         * @param camera  - The Camera service object
+         */
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             // Begin: Decode the data obtained by the camera into a Bitmap
@@ -521,7 +524,7 @@ public class CameraService extends Service implements
             File image = new File(imagesFolder, System.currentTimeMillis()
                     + ".jpg");
 
-            // write the bytes in file
+            // Write the bytes in file
             try {
                 fo = new FileOutputStream(image);
             } catch (FileNotFoundException e) {
@@ -566,11 +569,11 @@ public class CameraService extends Service implements
                 mCamera.release();
                 mCamera = null;
             }
+
             /*
              * Toast.makeText(getApplicationContext(),
-             * "Your Picture has been taken !", Toast.LENGTH_LONG).show();
+             * "Picture Taken !", Toast.LENGTH_LONG).show();
              */
-            // com.integreight.onesheeld.Log.d("Camera", "Image Taken !");/////////////////////////////////////////////////////////////////
             if (bmp != null) {
                 bmp.recycle();
                 bmp = null;
@@ -598,11 +601,12 @@ public class CameraService extends Service implements
     public static Camera getCameraInstance() {
         Camera c = null;
         try {
-            c = Camera.open(); // attempt to get a Camera instance
+            // Get a Camera instance
+            c = Camera.open();
         } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
+            System.out.println("Camera is not available (in use or does not exist)");
         }
-        return c; // returns null if camera is unavailable
+        return c;
     }
 
     @Override

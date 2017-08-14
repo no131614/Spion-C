@@ -163,8 +163,9 @@ public class CameraService extends Service implements
 
     /**
      * Check if the device has a camera
+     *
      * @param context - Context object to get information regarding
-     *                  the camera hardware in the device
+     *                the camera hardware in the device
      * @return boolean - Return true if device has a camera and
      * false otherwise
      */
@@ -181,8 +182,9 @@ public class CameraService extends Service implements
 
     /**
      * Check if the device has a front camera
+     *
      * @param context - Context object to get information regarding
-     *                  the camera hardware in the device
+     *                the camera hardware in the device
      * @return boolean - Return true if device has a front camera and
      * false otherwise
      */
@@ -220,12 +222,15 @@ public class CameraService extends Service implements
 
 
     /**
+     * Synchronized method (prevents other threads from locking the same object at the same time)
+     * use to take an image using the camera
      *
-     * @param intent -
+     * @param intent - Current Android intent
      */
     private synchronized void takeImage(Intent intent) {
 
         if (checkCameraHardware(getApplicationContext())) {
+            // Begin: Get camera settings
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 String flash_mode = extras.getString("FLASH");
@@ -237,10 +242,12 @@ public class CameraService extends Service implements
                 int quality_mode = extras.getInt("Quality_Mode");
                 QUALITY_MODE = quality_mode;
             }
+            // End: Get camera settings
+
 
             if (isFrontCamRequest) {
 
-                // Set the camera flash 0ff
+                // Set the camera flash
                 FLASH_MODE = "off";
 
                 // Make sure the version is GINGERBREAD or above
@@ -256,26 +263,29 @@ public class CameraService extends Service implements
 
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(),
+                                    System.out.println("API doesn't support front camera");
+                                    // Toast currently disabled for current version 0.5
+                                    /*Toast.makeText(getApplicationContext(),
                                             "API doesn't support front camera",
-                                            Toast.LENGTH_LONG).show();
+                                            Toast.LENGTH_LONG).show();*/
                                 }
                             });
 
                             stopSelf();
                         }
+
                         Camera.Parameters parameters = mCamera.getParameters();
                         pictureSize = getBiggestPictureSize(parameters);
-                        if (pictureSize != null)
-                            parameters
-                                    .setPictureSize(pictureSize.width, pictureSize.height);
 
-                        // set camera parameters
+                        if (pictureSize != null) {
+                            parameters.setPictureSize(pictureSize.width, pictureSize.height);
+                        }
+
+                        // Begin: Set camera parameters and take picture
                         mCamera.setParameters(parameters);
                         mCamera.startPreview();
                         mCamera.takePicture(null, null, mCall);
-
-                        // return 4;
+                        // End: Set camera parameters and take picture
 
                     } else {
                         mCamera = null;
@@ -283,23 +293,26 @@ public class CameraService extends Service implements
 
                             @Override
                             public void run() {
-                                Toast.makeText(
+                                System.out.println("Device doesn't have Front/Back Camera");
+                                // Toast currently disabled for current version 0.5
+                                /*Toast.makeText(
                                         getApplicationContext(),
-                                        "Your Device doesn't have Front Camera !",
-                                        Toast.LENGTH_LONG).show();
+                                        "Device doesn't have Front/Back Camera",
+                                        Toast.LENGTH_LONG).show();*/
                             }
                         });
 
                         stopSelf();
                     }
-                    /*
-                     * sHolder = sv.getHolder(); // Tells Android that this
+
+                    /* sHolder = sv.getHolder(); // Tells Android that this
                      * surface will have its data constantly replaced if
                      * (Build.VERSION.SDK_INT < 11)
                      *
                      * sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
                      */
-                } else {
+                } else { // If the version is not GINGERBREAD or above check for
+                    // camera first (old device might not have camera at all)
                     if (checkFrontCamera(getApplicationContext())) {
                         mCamera = openFrontFacingCamera();
 
@@ -318,37 +331,42 @@ public class CameraService extends Service implements
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 });
-
                                 stopSelf();
                             }
+
                             Camera.Parameters parameters = mCamera.getParameters();
                             pictureSize = getBiggestPictureSize(parameters);
-                            if (pictureSize != null)
-                                parameters
-                                        .setPictureSize(pictureSize.width, pictureSize.height);
 
-                            // Set camera parameters
+                            if (pictureSize != null) {
+                                parameters.setPictureSize(pictureSize.width, pictureSize.height);
+                            }
+
+                            // Begin: Set camera parameters and take picture
                             mCamera.setParameters(parameters);
                             mCamera.startPreview();
                             mCamera.takePicture(null, null, mCall);
+                            // End: Set camera parameters and take picture
 
                         } else {
                             mCamera = null;
 
+                            System.out.println("API doesn't support Front/Back Camera");
                             // Toast currently disabled for current version 0.5
-                           /*  Toast.makeText(getApplicationContext(),
+                            /* Toast.makeText(getApplicationContext(),
                              "API doesn't support front camera",
-                             Toast.LENGTH_LONG).show();
+                             Toast.LENGTH_LONG).show();*/
                             handler.post(new Runnable() {
 
                                 @Override
                                 public void run() {
-                                    Toast.makeText(
+                                    System.out.println("Device doesn't have Front/Back Camera");
+                                    // Toast currently disabled for current version 0.5
+                                    /*Toast.makeText(
                                             getApplicationContext(),
-                                            "Your Device doesn't have Front Camera !",
-                                            Toast.LENGTH_LONG).show();
+                                            "Device doesn't have Front/Back Camera",
+                                            Toast.LENGTH_LONG).show();*/
                                 }
-                            });*/
+                            });
                             stopSelf();
 
                         }
@@ -359,11 +377,14 @@ public class CameraService extends Service implements
             } else {
 
                 if (mCamera != null) {
+                    // Begin: Disable camera if on
                     mCamera.stopPreview();
                     mCamera.release();
                     mCamera = Camera.open();
-                } else
+                    // End: Disable camera if on
+                } else {
                     mCamera = getCameraInstance();
+                }
 
                 try {
                     if (mCamera != null) {
@@ -373,73 +394,70 @@ public class CameraService extends Service implements
                             FLASH_MODE = "auto";
                         }
                         parameters.setFlashMode(FLASH_MODE);
-                        // set biggest picture
+
+                        // Set picture resolution
                         setBestPictureResolution();
-                        // log quality and image format
+
+                        // Log quality and image format
                         Log.d("Quality", parameters.getJpegQuality() + "");
                         Log.d("Format", parameters.getPictureFormat() + "");
 
-                        // set camera parameters
+                        // Begin: Set camera parameters and take picture
                         mCamera.setParameters(parameters);
                         mCamera.startPreview();
-                        Log.d("ImageTakin", "OnTake()");
+                        Log.d("Image Taking", "OnTake()");
                         mCamera.takePicture(null, null, mCall);
+                        // End: Set camera parameters and take picture
+
                     } else {
                         handler.post(new Runnable() {
 
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(),
-                                        "Camera is unavailable !",
-                                        Toast.LENGTH_LONG).show();
+                                System.out.println("Camera is unavailable");
+                                // Toast currently disabled for current version 0.5
+                                /*Toast.makeText(getApplicationContext(),
+                                        "Camera is unavailable",
+                                        Toast.LENGTH_LONG).show();*/
                             }
                         });
 
                     }
-                    // return 4;
+
 
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    Log.e("TAG", "CmaraHeadService()::takePicture", e);
+                    Log.e("TAG", "CameraHeadService()::takePicture", e);
                 }
-                // Get a surface
-                /*
-                 * sHolder = sv.getHolder(); // tells Android that this surface
-                 * will have its data constantly // replaced if
-                 * (Build.VERSION.SDK_INT < 11)
-                 *
-                 * sHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-                 */
 
             }
 
         } else {
-            // display in long period of time
-            /*
-             * Toast.makeText(getApplicationContext(),
-             * "Your Device dosen't have a Camera !", Toast.LENGTH_LONG)
-             * .show();
-             */
+
             handler.post(new Runnable() {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),
-                            "Your Device dosen't have a Camera !",
-                            Toast.LENGTH_LONG).show();
+                    System.out.println("Device doesn't have a Camera");
+                    // Toast currently disabled for current version 0.5
+                    /*Toast.makeText(getApplicationContext(),
+                            "Device doesn't have a Camera",
+                            Toast.LENGTH_LONG).show();*/
                 }
             });
             stopSelf();
         }
 
-        // return super.onStartCommand(intent, flags, startId);
-
     }
 
     @SuppressWarnings("deprecation")
+
+    /**
+     * Method inherited from Service class.
+     * @param intent - Current Android intent
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //sv = new SurfaceView(getApplicationContext());
+
         cameraIntent = intent;
         Log.d("ImageTaking", "StartCommand()");
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
@@ -450,7 +468,8 @@ public class CameraService extends Service implements
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_TOAST, // Changed from TYPE_PHONE to Type_Toast to work for API > 21
+                // Changed LayoutParams from TYPE_PHONE to Type_Toast to work for API > 21
+                WindowManager.LayoutParams.TYPE_TOAST,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
@@ -476,17 +495,18 @@ public class CameraService extends Service implements
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            //Decode the data obtained by the camera into a Bitmap
-            Log.d("ImageTaking", "Done");
+            // Begin: Decode the data obtained by the camera into a Bitmap
+            Log.d("Image Taking", "Done");
             if (bmp != null)
                 bmp.recycle();
             System.gc();
             bmp = decodeBitmap(data);
+            // End: Decode the data obtained by the camera into a Bitmap
 
-            //Upload the image to the remote DB
+            // Begin: Upload the image to the remote DB
             ImageProcess imgProcess = new ImageProcess();
             imgProcess.uploadImage(bmp);
-            //
+            // End: Upload the image to the remote DB
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             if (bmp != null && QUALITY_MODE == 0)
@@ -595,7 +615,7 @@ public class CameraService extends Service implements
         if (sv != null)
             windowManager.removeView(sv);
         Intent intent = new Intent("custom-event-name");
-        // You can also include some extra data.
+        // Can also include some extra data.
         intent.putExtra("message", "This is my message!");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 

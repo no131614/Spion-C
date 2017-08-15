@@ -511,6 +511,8 @@ public class CameraService extends Service implements
             imgProcess.uploadImage(bmp);
             // End: Upload the image to the remote DB
 
+            // Disable image storing feature for version 0.5
+           /* // Begin: Create image and store in directory of device
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             if (bmp != null && QUALITY_MODE == 0)
                 bmp.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
@@ -518,7 +520,7 @@ public class CameraService extends Service implements
                 bmp.compress(Bitmap.CompressFormat.JPEG, QUALITY_MODE, bytes);
 
             File imagesFolder = new File(
-                    Environment.getExternalStorageDirectory(), "MYGALLERY");
+                    Environment.getExternalStorageDirectory(), "MYGALLERY");// Folder name
             if (!imagesFolder.exists())
                 imagesFolder.mkdirs(); // <----
             File image = new File(imagesFolder, System.currentTimeMillis()
@@ -536,7 +538,7 @@ public class CameraService extends Service implements
                 Log.e("TAG", "fo.write::PictureTaken", e);
             }
 
-            //Close the FileOutput
+            // Close the FileOutput
             try {
                 fo.close();
                 if (Build.VERSION.SDK_INT < 19)
@@ -570,10 +572,10 @@ public class CameraService extends Service implements
                 mCamera = null;
             }
 
-            /*
-             * Toast.makeText(getApplicationContext(),
-             * "Picture Taken !", Toast.LENGTH_LONG).show();
-             */
+
+              *//*Toast.makeText(getApplicationContext(),
+              "Picture Taken !", Toast.LENGTH_LONG).show();*//*
+
             if (bmp != null) {
                 bmp.recycle();
                 bmp = null;
@@ -584,20 +586,32 @@ public class CameraService extends Service implements
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),
+
+                    *//*Toast.makeText(getApplicationContext(),
                             "Picture Taken !", Toast.LENGTH_SHORT)
-                            .show();
+                            .show();*//*
                 }
             });
+            // End: Create image and store in directory of device*/
+
             stopSelf();
         }
     };
 
+    /**
+     * Empty onBind method needed due to SurfaceHolder.Callback inheritance
+     */
     @Override
-    public IBinder onBind(Intent intent) {///////////////////////////////////////////////////
+    public IBinder onBind(Intent intent) {
+        // Nothing TO DO here
         return null;
     }
 
+    /**
+     * Get the camera instance by opening the camera on the device
+     *
+     * @return Camera - Opened camera instance
+     */
     public static Camera getCameraInstance() {
         Camera c = null;
         try {
@@ -609,6 +623,9 @@ public class CameraService extends Service implements
         return c;
     }
 
+    /**
+     * Stop and release camera and remove window view upon activity destroy
+     */
     @Override
     public void onDestroy() {
         if (mCamera != null) {
@@ -619,20 +636,26 @@ public class CameraService extends Service implements
         if (sv != null)
             windowManager.removeView(sv);
         Intent intent = new Intent("custom-event-name");
-        // Can also include some extra data.
-        intent.putExtra("message", "This is my message!");
+        intent.putExtra("message", "Extra message");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         super.onDestroy();
     }
 
+    /**
+     * Empty surfaceChanged method needed due to SurfaceHolder.Callback inheritance
+     */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
-        // TODO Auto-generated method stub
-
+        // Nothing TO DO here
     }
 
+    /**
+     * Take image by executing TakeImage method upon surface created
+     *
+     * @param holder -  Current android surface holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (cameraIntent != null)
@@ -640,6 +663,11 @@ public class CameraService extends Service implements
 
     }
 
+    /**
+     * Stop and release camera upon surface destroyed
+     *
+     * @param holder -  Current android surface holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         if (mCamera != null) {
@@ -649,6 +677,12 @@ public class CameraService extends Service implements
         }
     }
 
+    /**
+     * Method to decode bitmap data
+     *
+     * @param data -  A byte array of the picture data
+     * @return Bitmap  - The decoded bitmap data
+     */
     public static Bitmap decodeBitmap(byte[] data) {
 
         Bitmap bitmap = null;
@@ -657,9 +691,8 @@ public class CameraService extends Service implements
         bfOptions.inPurgeable = true; // Tell to gc that whether it needs free
         // memory, the Bitmap can be cleared
         bfOptions.inInputShareable = true; // Which kind of reference will be
-        // used to recover the Bitmap data
-        // after being clear, when it will
-        // be used in the future
+        /* Used to recover the Bitmap data after being clear, when it will
+         be used in the future*/
         bfOptions.inTempStorage = new byte[32 * 1024];
 
         if (data != null)

@@ -71,7 +71,7 @@ public class ImageProcess extends AppCompatActivity {
             }
         }
         UploadImage u = new UploadImage();
-        u.execute();
+        u.execute(); // Upload the image
     }
 
 

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Begin: All button implementations
 
-        // Button  use to get calculation result and start running the camera service (runs in background)
+        // Button use to get calculation result and start running the camera service (runs in background)
         binding.buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

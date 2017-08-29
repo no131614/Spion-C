@@ -1,9 +1,10 @@
 package first.alexander.com.spion_c;
 
 /**
- * Created by Alexander Julianto on 7/29/2017.
+ * RequestHandler.java - a class to handle HTTP request.
+ *
+ * @author Alexander Julianto (no131614)
  */
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,6 +24,7 @@ public class RequestHandler {
 
     private final int READ_TIMEOUT = 15000; //15000 = 15 seconds
     private final int CONNECT_TIMEOUT = 15000;
+
 
     public String sendPostRequest(String requestURL,
                                   HashMap<String, String> postDataParams) {

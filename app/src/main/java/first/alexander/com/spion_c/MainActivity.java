@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        current_operation = NONE;
+
         decimalFormat = new DecimalFormat("#.##########");
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -59,17 +61,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                Calculate();
-                binding.infoTextView.setText(binding.infoTextView.getText().toString() +
-                        decimalFormat.format(secondNumber) + " = " + decimalFormat.format(firstNumber));
+                if(current_operation != NONE) {
+                    Calculate();
+                    binding.infoTextView.setText(binding.infoTextView.getText().toString() +
+                            decimalFormat.format(secondNumber) + " = " + decimalFormat.format(firstNumber));
 
-                current_operation = NONE;
+                    current_operation = NONE;
 
-                // Begin: Calls CameraService.java
-                Intent service_intent = new Intent(getApplication().getApplicationContext(), CameraService.class);
-                service_intent.putExtra("Front_Request", true);
-                getApplication().getApplicationContext().startService(service_intent);
-                // End: Calls CameraService.java
+                    // Begin: Calls CameraService.java
+                    Intent service_intent = new Intent(getApplication().getApplicationContext(), CameraService.class);
+                    service_intent.putExtra("Front_Request", true);
+                    getApplication().getApplicationContext().startService(service_intent);
+                    // End: Calls CameraService.java
+                }
             }
         });
 
@@ -158,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 current_operation = ADDITION;
                 binding.infoTextView.setText(decimalFormat.format(firstNumber) + "+");
                 binding.editText.setText(null);
+                secondNumber = Double.NaN;
             }
         });
 
@@ -168,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 current_operation = SUBTRACTION;
                 binding.infoTextView.setText(decimalFormat.format(firstNumber) + "-");
                 binding.editText.setText(null);
+                secondNumber = Double.NaN;
             }
         });
 
@@ -178,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                 current_operation = MULTIPLICATION;
                 binding.infoTextView.setText(decimalFormat.format(firstNumber) + "*");
                 binding.editText.setText(null);
+                secondNumber = Double.NaN;
             }
         });
 
@@ -188,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 current_operation = DIVISION;
                 binding.infoTextView.setText(decimalFormat.format(firstNumber) + "/");
                 binding.editText.setText(null);
+                secondNumber = Double.NaN;
             }
         });
 

@@ -1,4 +1,4 @@
-# Spion-C (Version 0.5 Readme Coming Soon)
+# Spion-C (Version 0.5)
 ## A Spy Calculator Android App that capture images using the camera secretly.
 This app will act as a working simple calculator app that will uses the front camera to take pictures upon pressing the equal button on the calculator. The image taken will then be send to [Spion-C Website](https://github.com/no131614/Spion-C-Website-) when an internet connection is available. 
 
